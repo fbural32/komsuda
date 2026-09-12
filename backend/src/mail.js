@@ -1,10 +1,12 @@
 import 'dotenv/config';
 
-// Mail gönderimi — SMTP üzerinden. Gmail, Brevo, Mailjet, hepsi çalışır.
-// SMTP_USER tanımlı değilse mail gönderilmez, link konsola yazılır.
+// Mail gönderimi.
+// Render ücretsiz katmanda SMTP portları (25/465/587) kapalı olduğu için
+// öncelik HTTPS üzerinden çalışan Brevo API'sinde. Anahtar yoksa SMTP denenir.
 
 import nodemailer from 'nodemailer';
 
+const BREVO_KEY = process.env.BREVO_API_KEY;
 const HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
 const PORT = Number(process.env.SMTP_PORT || 587);
 const USER = process.env.SMTP_USER;
@@ -27,7 +29,32 @@ function getTransporter() {
   return transporter;
 }
 
+async function brevoIleGonder({ to, subject, html }) {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': BREVO_KEY,
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: FROM_NAME, email: FROM_EMAIL },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detay = await res.text();
+    throw new Error(`Brevo hatası (${res.status}): ${detay}`);
+  }
+  return res.json();
+}
+
 async function gonder({ to, subject, html }) {
+  if (BREVO_KEY) return brevoIleGonder({ to, subject, html });
+
   if (!USER || !PASS) {
     console.log(`[mail devre dışı] ${to} → ${subject}`);
     return { skipped: true };
