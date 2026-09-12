@@ -183,15 +183,97 @@ Uygulamanın adı, logosu, tasarımı ve yazılımı hizmet sağlayıcıya aitti
 
 ## 8. Sorumluluk sınırı
 
-Yürürlükteki mevzuatın izin verdiği azami ölçüde, Komşuda aşağıdakilerden
-sorumlu değildir:
+### 8.1 Platformun konumu
 
-- Kullanıcılar arasındaki alışverişten doğan hiçbir zarar
-- Teslim edilmeyen, eksik veya ayıplı ürünler
-- Ödeme anlaşmazlıkları
-- Buluşma sırasında yaşanan olaylar
-- Hizmetin kesintiye uğraması veya teknik arızalar
-- Kullanıcıların paylaştığı yanlış veya yanıltıcı bilgiler
+Komşuda, 6563 sayılı Elektronik Ticaretin Düzenlenmesi Hakkında Kanun
+anlamında bir **aracı hizmet sağlayıcıdır**. Kullanıcılar tarafından
+oluşturulan içeriği kontrol etmek, bu içeriğin hukuka aykırı olup
+olmadığını araştırmakla yükümlü değildir.
+
+Platform;
+
+- Satıcı, alıcı, taşıyıcı, kurye, işveren veya yüklenici **değildir**
+- Ürün ve hizmetlerin sahibi, üreticisi veya sağlayıcısı **değildir**
+- Ödemeye taraf olmaz, ödeme tutmaz, tahsilat veya aktarım yapmaz
+- Kullanıcılar arasında kurulan sözleşmenin tarafı **değildir**
+- Ürün ve hizmetlerin kalitesi, ayıpsızlığı, güvenliği, yasallığı,
+  miktarı veya teslim edilip edilmeyeceği konusunda **taahhütte bulunmaz**
+
+Kullanıcılar arasındaki ilişki, tamamen kendi aralarında kurdukları
+bağımsız bir hukuki ilişkidir.
+
+### 8.2 Sorumluluk kapsamı dışındaki haller
+
+Yürürlükteki mevzuatın izin verdiği azami ölçüde, Komşuda aşağıdakilerden
+sorumlu tutulamaz:
+
+**Alışverişe ilişkin**
+- Teslim edilmeyen, eksik, ayıplı, sahte veya beklentiyi karşılamayan
+  ürünler
+- Boş çıkan tüp, bozuk cihaz, kullanılamaz durumda gelen eşya
+- Ödeme anlaşmazlıkları, eksik ödeme, ödenmeme
+- Anlaşılan fiyatın veya sürenin sonradan değiştirilmesi
+- Tarafların birbirine verdiği sözlü taahhütler
+
+**Hizmetlere ilişkin**
+- Hizmetin ayıplı, eksik veya hatalı yapılması
+- Hizmet sırasında konuta, eşyaya veya üçüncü kişilere verilen zarar
+- İş kazası, yaralanma, ölüm veya meslek hastalığı
+- Hizmet verenin mesleki yeterliliği, ruhsatı, sigortası, vergi ve
+  SGK yükümlülükleri
+- Yetki belgesi gerektiren işlerin (elektrik, doğalgaz, su tesisatı,
+  asansör vb.) belgesiz kişilerce yapılması ve doğacak sonuçlar
+
+**Buluşma ve fiziksel temasa ilişkin**
+- Teslimat veya hizmet sırasında yaşanan her türlü olay
+- Kişilere yönelik saldırı, hırsızlık, dolandırıcılık, taciz
+- Konuta kabul edilen kişilerin davranışları
+- Trafik kazası ve yolda oluşan zararlar
+
+**Kullanıcı bilgilerine ilişkin**
+- Kullanıcıların paylaştığı yanlış, eksik veya yanıltıcı bilgiler
+- Sahte profil, yanıltıcı fotoğraf, gerçeğe aykırı beyan
+- Puanlama ve yorumların doğruluğu
+
+**Teknik**
+- Hizmetin kesintiye uğraması, gecikmesi, hatalı çalışması
+- Bildirimlerin ulaşmaması veya gecikmesi
+- Konum verisinin hatalı olması
+- Üçüncü taraf servislerin (harita, bildirim, sunucu) kesintileri
+- Veri kaybı
+
+### 8.3 Kullanıcının sorumluluğu
+
+Kullanıcı, platformu kullanarak;
+
+- Karşı tarafı kendisinin değerlendirdiğini ve seçtiğini
+- Fiziksel buluşma kararını kendi iradesiyle verdiğini
+- Ödemeyi kendi sorumluluğunda yaptığını
+- Yasaklı ürün ve hizmet paylaşmayacağını
+- Paylaştığı bilgilerin doğru olduğunu
+
+kabul eder. Bu yükümlülüklere aykırılıktan doğan zararlardan kullanıcı
+kendisi sorumludur.
+
+### 8.4 Rücu
+
+Bir kullanıcının eylemi nedeniyle Komşuda aleyhine üçüncü kişiler
+tarafından talep, dava veya idari işlem yöneltilmesi hâlinde; Komşuda'nın
+ödemek zorunda kaldığı tazminat, ceza, vekalet ücreti ve yargılama
+giderleri için ilgili kullanıcıya rücu edilir.
+
+### 8.5 Tüketici hakları saklıdır
+
+Bu bölümdeki sınırlamalar, 6502 sayılı Tüketicinin Korunması Hakkında
+Kanun'un emredici hükümlerini ve kullanıcıların bu kanundan doğan
+haklarını ortadan kaldırmaz. Kanunen sınırlandırılamayan sorumluluklar
+bakımından bu hükümler uygulanmaz.
+
+### 8.6 İhlal bildirimi
+
+Hukuka aykırı içerik veya davranış tespit edersen [E-POSTA ADRESİ]
+adresine bildir. Bildirim üzerine gerekli incelemeyi yapar, ihlal tespit
+edersek içeriği kaldırır ve gerekirse hesabı kapatırız.
 
 ---
 

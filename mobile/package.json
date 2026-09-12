@@ -7,7 +7,8 @@
     "android": "expo run:android",
     "build:preview": "eas build --platform android --profile preview",
     "build:production": "eas build --platform android --profile production",
-    "submit": "eas submit --platform android"
+    "submit": "eas submit --platform android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@maplibre/maplibre-react-native": "^10.0.0",

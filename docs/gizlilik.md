@@ -193,5 +193,39 @@ değişikliklerde yeniden onayınız istenir.
 
 ---
 
+---
+
+## 10. Veri güvenliği sınırı ve sorumluluk
+
+Komşuda, kişisel verilerin korunması için makul teknik ve idari tedbirleri
+alır. Ancak;
+
+- Hiçbir sistem %100 güvenli değildir
+- Kullanıcının kendi hesap bilgilerini paylaşmasından doğan erişimlerden
+- Kullanıcının cihazının çalınması, kaybolması veya ele geçirilmesinden
+- Kullanıcıların birbirine gönüllü olarak paylaştığı bilgilerden
+  (konum, telefon, adres)
+- Üçüncü taraf hizmet sağlayıcıların kendi sistemlerinde yaşanan
+  ihlallerden
+
+doğan sonuçlardan Komşuda sorumlu tutulamaz.
+
+Veri ihlali yaşanması hâlinde KVKK'nın öngördüğü şekilde Kişisel Verileri
+Koruma Kurulu'na ve ilgili kişilere bildirim yapılır. Bu, kanundan doğan
+tazminat haklarını ortadan kaldırmaz.
+
+## 11. Kullanıcıların birbirine gösterdiği veriler
+
+Platform, kullanıcıların birbirine gösterdiği ad, fotoğraf, puan ve konum
+bilgisinin doğruluğunu garanti etmez. Karşı tarafın kimliğini doğrulamak,
+güvenilirliğini değerlendirmek ve buluşma kararını vermek kullanıcının
+kendi sorumluluğundadır.
+
+Bir kullanıcının diğerinin verilerini kaydetmesi, ekran görüntüsü alması
+veya platform dışında kullanması Komşuda'nın kontrolünde değildir. Bu tür
+kullanımlar kullanım şartlarının ihlalidir ve şikayet edilebilir.
+
+---
+
 > Bu metin genel bilgilendirme amaçlıdır ve hukuki danışmanlık yerine geçmez.
 > Yayına almadan önce bir avukata inceletmeniz önerilir.
