@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ScrollView,
 } from 'react-native';
 import { api } from '../api';
+import { play } from '../sounds';
 import { colors, type, radius, space } from '../theme';
 
 const NOTIFY_COOLDOWN_S = 15 * 60;
@@ -18,6 +19,10 @@ export default function MyRequestScreen({ route, navigation }) {
   const load = useCallback(async () => {
     try {
       const data = await api.myRequest(requestId);
+      // Yeni teklif geldiyse kısa zil sesi
+      if (request && (data.offers?.length || 0) > (request.offers?.length || 0)) {
+        play('teklifGeldi').catch(() => {});
+      }
       setRequest(data);
 
       if (data.deal_id) {
@@ -32,7 +37,7 @@ export default function MyRequestScreen({ route, navigation }) {
     } catch (e) {
       setError(e.message);
     }
-  }, [requestId, navigation]);
+  }, [requestId, navigation, request]);
 
   useEffect(() => {
     load();

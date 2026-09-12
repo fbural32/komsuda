@@ -19,7 +19,7 @@ export default function VerifyScreen({ route, navigation }) {
         const me = await api.me();
         if (me.email_verified_at) {
           clearInterval(poll.current);
-          navigation.reset({ index: 0, routes: [{ name: 'Map' }] });
+          navigation.reset({ index: 0, routes: [{ name: 'Permissions' }] });
         }
       } catch {}
     }, 5000);

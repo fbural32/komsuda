@@ -32,8 +32,29 @@ ve anladığınızı kabul etmiş olursunuz.
 
 ### 2.2 Konum verisi
 
-Uygulama, yalnızca **ön planda açıkken** konumunuza erişir. Arka planda konum
-takibi yapılmaz.
+Uygulama iki şekilde konumunuza erişir:
+
+**Uygulama açıkken:** Haritada yakınınızdaki istekleri gösterebilmek için.
+
+**Uygulama kapalıyken (arka planda):** Yakınınızda yeni bir istek
+oluştuğunda size bildirim gönderebilmek için. Bu izin **isteğe bağlıdır**;
+vermezseniz uygulama çalışmaya devam eder, yalnızca bildirimleri uygulama
+açıkken alırsınız.
+
+Arka plan konumu hakkında bilmeniz gerekenler:
+
+- Konumunuz en fazla 15 dakikada bir veya 500 metre hareket ettiğinizde
+  güncellenir
+- **Konum geçmişiniz tutulmaz.** Sistemde yalnızca en son bilinen konumunuz
+  saklanır, bir önceki değerin üzerine yazılır
+- Nereye gittiğiniz, ne kadar kaldığınız, hangi rotayı izlediğiniz
+  kaydedilmez ve kaydedilemez
+- Konumunuz yalnızca "bu isteğe kim yakın" sorusunu yanıtlamak için
+  kullanılır
+- Android, arka planda konum kullanıldığında bildirim çubuğunda kalıcı bir
+  simge gösterir; bu, uygulamanın konumunuzu kullandığını her an görmenizi
+  sağlar
+- İzni istediğiniz an cihaz ayarlarından geri alabilirsiniz
 
 İki farklı konum kaydı tutulur:
 
@@ -187,6 +208,40 @@ tespit ettiğimiz hesaplar kapatılır ve verileri silinir.
 
 Bu politika güncellendiğinde uygulama içinde bildirim yapılır. Önemli
 değişikliklerde yeniden onayınız istenir.
+
+---
+
+---
+
+## 10. Veri güvenliği sınırı ve sorumluluk
+
+Komşuda, kişisel verilerin korunması için makul teknik ve idari tedbirleri
+alır. Ancak;
+
+- Hiçbir sistem %100 güvenli değildir
+- Kullanıcının kendi hesap bilgilerini paylaşmasından doğan erişimlerden
+- Kullanıcının cihazının çalınması, kaybolması veya ele geçirilmesinden
+- Kullanıcıların birbirine gönüllü olarak paylaştığı bilgilerden
+  (konum, telefon, adres)
+- Üçüncü taraf hizmet sağlayıcıların kendi sistemlerinde yaşanan
+  ihlallerden
+
+doğan sonuçlardan Komşuda sorumlu tutulamaz.
+
+Veri ihlali yaşanması hâlinde KVKK'nın öngördüğü şekilde Kişisel Verileri
+Koruma Kurulu'na ve ilgili kişilere bildirim yapılır. Bu, kanundan doğan
+tazminat haklarını ortadan kaldırmaz.
+
+## 11. Kullanıcıların birbirine gösterdiği veriler
+
+Platform, kullanıcıların birbirine gösterdiği ad, fotoğraf, puan ve konum
+bilgisinin doğruluğunu garanti etmez. Karşı tarafın kimliğini doğrulamak,
+güvenilirliğini değerlendirmek ve buluşma kararını vermek kullanıcının
+kendi sorumluluğundadır.
+
+Bir kullanıcının diğerinin verilerini kaydetmesi, ekran görüntüsü alması
+veya platform dışında kullanması Komşuda'nın kontrolünde değildir. Bu tür
+kullanımlar kullanım şartlarının ihlalidir ve şikayet edilebilir.
 
 ---
 

@@ -72,6 +72,16 @@ export default function MapScreen({ navigation }) {
 
   return (
     <View style={s.root}>
+      <View style={s.ustSatir}>
+        <Text style={s.baslik}>Yakındaki istekler</Text>
+        <TouchableOpacity
+          style={s.profilBtn}
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <Text style={s.profilMetin}>Profilim</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={s.toggle}>
         {['map', 'list'].map((v) => (
           <TouchableOpacity
@@ -227,8 +237,19 @@ const s = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   map: { flex: 1 },
 
+  ustSatir: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: space.lg, paddingTop: space.md,
+  },
+  baslik: { ...type.h2 },
+  profilBtn: {
+    borderWidth: 1, borderColor: colors.border, borderRadius: radius.pill,
+    paddingHorizontal: 14, paddingVertical: 7, backgroundColor: colors.surface,
+  },
+  profilMetin: { ...type.small, fontWeight: '600' },
+
   toggle: {
-    flexDirection: 'row', margin: space.lg, marginBottom: space.sm,
+    flexDirection: 'row', margin: space.lg, marginTop: space.md, marginBottom: space.sm,
     backgroundColor: colors.surfaceAlt, borderRadius: radius.md, padding: 3,
   },
   toggleBtn: { flex: 1, paddingVertical: 8, borderRadius: radius.sm, alignItems: 'center' },

@@ -27,6 +27,9 @@ export default {
       permissions: [
         'ACCESS_COARSE_LOCATION',
         'ACCESS_FINE_LOCATION',
+        'ACCESS_BACKGROUND_LOCATION',
+        'FOREGROUND_SERVICE',
+        'FOREGROUND_SERVICE_LOCATION',
         'POST_NOTIFICATIONS',
       ],
     },
@@ -43,7 +46,11 @@ export default {
         'expo-location',
         {
           locationAlwaysAndWhenInUsePermission:
-            'Komşuda, yakınındaki istekleri gösterebilmek için konumunu kullanır. Arka planda konum takibi yapılmaz.',
+            'Komşuda, yakınındaki komşuların acil ihtiyaç isteklerini sana bildirebilmek için konumunu kullanır.',
+          locationWhenInUsePermission:
+            'Komşuda, yakınındaki istekleri haritada gösterebilmek için konumunu kullanır.',
+          isAndroidBackgroundLocationEnabled: true,
+          isAndroidForegroundServiceEnabled: true,
         },
       ],
       [

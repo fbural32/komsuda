@@ -190,6 +190,7 @@ Yanlış beyan uygulamanın kaldırılmasına yol açıyor, dikkatli doldur.
 Dokuz ekran da bağlı ve çalışır durumda. Kalan eksikler:
 
 - [ ] Profil fotoğrafı yükleme + AI/sahte fotoğraf tespiti
+- [ ] Play Console: arka plan konum izni beyanı ve tanıtım videosu
 - [ ] Moderasyon paneli (şikayetleri inceleme)
 
 ## Yasal metinler

@@ -56,9 +56,12 @@ export const api = {
   register: (b) => request('/users/register', { method: 'POST', body: b }),
   login: (b) => request('/users/login', { method: 'POST', body: b }),
   me: () => request('/users/me'),
+  hesabiSil: () => request('/users/me', { method: 'DELETE' }),
   resendVerification: () =>
     request('/users/resend-verification', { method: 'POST' }),
   registerDevice: (b) => request('/users/device', { method: 'POST', body: b }),
+  updateLocation: (lat, lng) =>
+    request('/users/location', { method: 'POST', body: { lat, lng } }),
 
   categories: () => request('/requests/categories'),
   nearby: ({ lat, lng, min, max, category }) => {

@@ -7,7 +7,6 @@ import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native';
 import { api } from '../api';
-import { gorselYukle } from '../upload';
 import { colors, type, radius, space } from '../theme';
 
 
@@ -101,26 +100,6 @@ export default function DealScreen({ route, navigation }) {
     try { await fn(); await load(); }
     catch (e) { setError(e.message); }
   };
-
-  const fotografYukle = () => act(async () => {
-    const izin = await ImagePicker.requestCameraPermissionsAsync();
-    if (!izin.granted) throw new Error('Kamera izni verilmedi');
-
-    const sonuc = await ImagePicker.launchCameraAsync({
-      quality: 0.5,
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-    if (sonuc.canceled) return;
-
-    setYukleniyor(true);
-    try {
-      const url = await gorselYukle(sonuc.assets[0].uri);
-      await api.uploadPhoto(dealId, url);
-    } finally {
-      setYukleniyor(false);
-    }
-  });
 
   const fotografCek = () => act(async () => {
     const izin = await ImagePicker.requestCameraPermissionsAsync();

@@ -35,8 +35,29 @@ ve anladığınızı kabul etmiş olursunuz.
 
 ### 2.2 Konum verisi
 
-Uygulama, yalnızca **ön planda açıkken** konumunuza erişir. Arka planda konum
-takibi yapılmaz.
+Uygulama iki şekilde konumunuza erişir:
+
+**Uygulama açıkken:** Haritada yakınınızdaki istekleri gösterebilmek için.
+
+**Uygulama kapalıyken (arka planda):** Yakınınızda yeni bir istek
+oluştuğunda size bildirim gönderebilmek için. Bu izin **isteğe bağlıdır**;
+vermezseniz uygulama çalışmaya devam eder, yalnızca bildirimleri uygulama
+açıkken alırsınız.
+
+Arka plan konumu hakkında bilmeniz gerekenler:
+
+- Konumunuz en fazla 15 dakikada bir veya 500 metre hareket ettiğinizde
+  güncellenir
+- **Konum geçmişiniz tutulmaz.** Sistemde yalnızca en son bilinen konumunuz
+  saklanır, bir önceki değerin üzerine yazılır
+- Nereye gittiğiniz, ne kadar kaldığınız, hangi rotayı izlediğiniz
+  kaydedilmez ve kaydedilemez
+- Konumunuz yalnızca "bu isteğe kim yakın" sorusunu yanıtlamak için
+  kullanılır
+- Android, arka planda konum kullanıldığında bildirim çubuğunda kalıcı bir
+  simge gösterir; bu, uygulamanın konumunuzu kullandığını her an görmenizi
+  sağlar
+- İzni istediğiniz an cihaz ayarlarından geri alabilirsiniz
 
 İki farklı konum kaydı tutulur:
 

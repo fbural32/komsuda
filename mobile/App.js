@@ -8,11 +8,15 @@ import * as Location from 'expo-location';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getToken, api } from './src/api';
+import { arkaPlanKonumuBaslat } from './src/location';
+import { initSounds, play } from './src/sounds';
 import { colors } from './src/theme';
 
 import LoginScreen from './src/screens/LoginScreen';
 import VerifyScreen from './src/screens/VerifyScreen';
+import PermissionsScreen from './src/screens/PermissionsScreen';
 import MapScreen from './src/screens/MapScreen';
 import CreateRequestScreen from './src/screens/CreateRequestScreen';
 import RequestDetailScreen from './src/screens/RequestDetailScreen';
@@ -26,14 +30,19 @@ import ProfileScreen from './src/screens/ProfileScreen';
 const Stack = createNativeStackNavigator();
 
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async (bildirim) => {
+    // Uygulama açıkken kapı zili sesini kendimiz çalıyoruz
+    const acil = bildirim.request?.content?.data?.is_urgent;
+    play(acil ? 'acilIstek' : 'yeniIstek').catch(() => {});
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    };
+  },
 });
 
-async function registerForPush() {
+export async function registerForPush() {
   if (!Device.isDevice) return;
 
   if (Platform.OS === 'android') {
@@ -84,12 +93,19 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      initSounds().catch(() => {});
       const token = await getToken();
       if (!token) { setReady(true); return; }
       try {
         const me = await api.me();
-        setStart(me.email_verified_at ? 'Map' : 'Verify');
+        if (!me.email_verified_at) {
+          setStart('Verify');
+        } else {
+          const izinBitti = await AsyncStorage.getItem('izinler_tamam');
+          setStart(izinBitti ? 'Map' : 'Permissions');
+        }
         registerForPush().catch(console.warn);
+        arkaPlanKonumuBaslat().catch(() => {});
       } catch {
         setStart('Login');
       }
@@ -119,6 +135,7 @@ export default function App() {
       >
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Verify" component={VerifyScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Permissions" component={PermissionsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Map" component={MapScreen} options={{ title: 'Yakındaki istekler' }} />
         <Stack.Screen name="CreateRequest" component={CreateRequestScreen} options={{ title: 'İstek oluştur' }} />
         <Stack.Screen name="RequestDetail" component={RequestDetailScreen} options={{ title: 'İstek' }} />

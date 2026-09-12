@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Alert,
 } from 'react-native';
 import { api, clearToken } from '../api';
+import { arkaPlanKonumuDurdur } from '../location';
 import { colors, type, radius, space } from '../theme';
 
 export default function ProfileScreen({ navigation }) {
@@ -18,8 +19,45 @@ export default function ProfileScreen({ navigation }) {
     .split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 
   const logout = async () => {
+    await arkaPlanKonumuDurdur().catch(() => {});
     await clearToken();
     navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+  };
+
+  const hesabiSil = () => {
+    Alert.alert(
+      'Hesabını sil',
+      'Hesabın ve kişisel verilerin kalıcı olarak silinecek. Bu işlem geri alınamaz.',
+      [
+        { text: 'Vazgeç', style: 'cancel' },
+        {
+          text: 'Hesabımı sil',
+          style: 'destructive',
+          onPress: () =>
+            Alert.alert(
+              'Emin misin?',
+              'Son onay. Silme işlemi geri alınamaz.',
+              [
+                { text: 'Vazgeç', style: 'cancel' },
+                {
+                  text: 'Evet, sil',
+                  style: 'destructive',
+                  onPress: async () => {
+                    try {
+                      await api.hesabiSil();
+                      await arkaPlanKonumuDurdur().catch(() => {});
+                      await clearToken();
+                      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+                    } catch (e) {
+                      Alert.alert('Hata', e.message);
+                    }
+                  },
+                },
+              ]
+            ),
+        },
+      ]
+    );
   };
 
   return (
@@ -68,6 +106,15 @@ export default function ProfileScreen({ navigation }) {
       <TouchableOpacity style={s.logout} onPress={logout}>
         <Text style={s.logoutText}>Çıkış yap</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={s.sil} onPress={hesabiSil}>
+        <Text style={s.silText}>Hesabımı sil</Text>
+      </TouchableOpacity>
+
+      <Text style={s.silNot}>
+        Hesabını sildiğinde kişisel verilerin silinir. Diğer kullanıcılara
+        verdiğin puanlar kimliğinden arındırılmış şekilde kalır.
+      </Text>
     </ScrollView>
   );
 }
@@ -123,6 +170,15 @@ const s = StyleSheet.create({
   },
   reviewStars: { color: '#E9A81C', marginBottom: 4 },
 
-  logout: { alignItems: 'center', paddingVertical: space.xl },
-  logoutText: { ...type.body, color: colors.danger },
+  logout: { alignItems: 'center', paddingVertical: space.lg, marginTop: space.md },
+  logoutText: { ...type.body, fontWeight: '500' },
+  sil: {
+    alignItems: 'center', paddingVertical: 13, borderRadius: radius.md,
+    borderWidth: 1, borderColor: colors.border, marginTop: space.sm,
+  },
+  silText: { ...type.body, color: colors.danger, fontWeight: '500' },
+  silNot: {
+    ...type.tiny, textAlign: 'center', marginTop: space.md,
+    marginBottom: space.xl, lineHeight: 16,
+  },
 });

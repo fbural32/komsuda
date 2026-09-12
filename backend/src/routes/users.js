@@ -169,6 +169,24 @@ router.post('/device', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
+// Arka plandan gelen konum güncellemesi.
+// Sadece bildirim hedeflemesi için tutulur, geçmiş kaydı yapılmaz.
+router.post('/location', requireAuth, async (req, res) => {
+  const { lat, lng } = req.body;
+  if (lat == null || lng == null)
+    return res.status(400).json({ error: 'Konum gerekli' });
+
+  const { rowCount } = await query(
+    `UPDATE devices
+        SET last_location = ST_MakePoint($2,$3)::geography,
+            location_updated_at = now(),
+            updated_at = now()
+      WHERE user_id = $1`,
+    [req.user.id, lng, lat]
+  );
+  res.json({ ok: true, guncellenen: rowCount });
+});
+
 // KVKK — hesap silme
 router.delete('/me', requireAuth, async (req, res) => {
   await query('DELETE FROM users WHERE id = $1', [req.user.id]);

@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }) {
       if (mode === 'register') {
         navigation.reset({ index: 0, routes: [{ name: 'Verify', params: { email } }] });
       } else {
-        navigation.reset({ index: 0, routes: [{ name: 'Map' }] });
+        navigation.reset({ index: 0, routes: [{ name: 'Permissions' }] });
       }
     } catch (e) {
       setError(e.message);
