@@ -4,10 +4,10 @@ title: Gizlilik Politikası
 ---
 
 **Uygulama:** Komşuda
-**Son güncelleme:** [TARİH]
-**Veri sorumlusu:** [AD SOYAD / ŞİRKET ÜNVANI]
-**İletişim:** [E-POSTA ADRESİ]
-**Adres:** [AÇIK ADRES]
+**Son güncelleme:** 14 Eylül 2026
+**Veri sorumlusu:** Furkan Bural (fbural)
+**İletişim:** furkanbural32@gmail.com
+**Adres:** Muradiye Mahallesi, Demiryolu Caddesi, Ayyıldız Sitesi D Blok No: 10, Yunusemre / Manisa
 
 ---
 
@@ -120,10 +120,13 @@ Konum ve bildirim izinlerini istediğiniz an cihaz ayarlarından geri
 
 | Veri | Kim görür |
 |---|---|
-| Ad/takma ad, profil fotoğrafı, puan ortalaması | 3 km içindeki tüm kullanıcılar |
-| Yaklaşık konum | 3 km içindeki tüm kullanıcılar |
+| Ad/takma ad, profil fotoğrafı, puan ortalaması | Arama yarıçapındaki kullanıcılar |
+| Yaklaşık konum | Arama yarıçapındaki kullanıcılar |
 | Kesin teslimat konumu | Yalnızca anlaştığınız kişi |
 | E-posta adresiniz | **Hiç kimse** |
+
+Arama yarıçapı, eşya isteklerinde 10 km, hizmet isteklerinde 25 km'dir.
+Bu mesafeler hizmetin işleyişine göre değiştirilebilir.
 
 ### 4.2 Hizmet sağlayıcılarla
 
@@ -181,7 +184,7 @@ Veri sorumlusuna başvurarak şunları talep edebilirsiniz:
 - Otomatik sistemlerle analiz sonucu aleyhinize bir sonuç doğmasına itiraz etme
 - Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde tazminat talep etme
 
-**Başvuru:** [E-POSTA ADRESİ] adresine yazabilir veya uygulama içindeki
+**Başvuru:** furkanbural32@gmail.com adresine yazabilir veya uygulama içindeki
 "Hesabımı sil" seçeneğini kullanabilirsiniz. Başvurular en geç 30 gün içinde
 sonuçlandırılır.
 

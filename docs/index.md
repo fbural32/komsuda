@@ -14,4 +14,4 @@ gidermesine aracılık eden bir eşleştirme uygulamasıdır.
 
 ## İletişim
 
-[E-POSTA ADRESİ]
+furkanbural32@gmail.com

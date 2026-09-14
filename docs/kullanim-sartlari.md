@@ -4,8 +4,8 @@ title: Kullanım Şartları
 ---
 
 **Uygulama:** Komşuda
-**Son güncelleme:** [TARİH]
-**Hizmet sağlayıcı:** [AD SOYAD / ŞİRKET ÜNVANI]
+**Son güncelleme:** 14 Eylül 2026
+**Hizmet sağlayıcı:** Furkan Bural (fbural)
 
 ---
 
@@ -164,7 +164,7 @@ doğrudan hesap kapatılabilir.
 
 ### 6.3 İtiraz
 
-Hesabı kapatılan kullanıcılar [E-POSTA ADRESİ] adresine yazarak itiraz
+Hesabı kapatılan kullanıcılar furkanbural32@gmail.com adresine yazarak itiraz
 edebilir. İtirazlar 15 gün içinde değerlendirilir.
 
 ### 6.4 Asılsız şikayet
@@ -271,7 +271,7 @@ bakımından bu hükümler uygulanmaz.
 
 ### 8.6 İhlal bildirimi
 
-Hukuka aykırı içerik veya davranış tespit edersen [E-POSTA ADRESİ]
+Hukuka aykırı içerik veya davranış tespit edersen furkanbural32@gmail.com
 adresine bildir. Bildirim üzerine gerekli incelemeyi yapar, ihlal tespit
 edersek içeriği kaldırır ve gerekirse hesabı kapatırız.
 
@@ -296,7 +296,7 @@ yetkisi saklıdır.
 
 ## 11. İletişim
 
-Sorularınız için: [E-POSTA ADRESİ]
+Sorularınız için: furkanbural32@gmail.com
 
 ---
 

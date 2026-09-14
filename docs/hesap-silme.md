@@ -15,7 +15,7 @@ gerekmez.
 ## E-posta ile
 
 Uygulamaya erişemiyorsanız, hesabınıza kayıtlı e-posta adresinden
-[E-POSTA ADRESİ] adresine "Hesap silme talebi" konulu bir mesaj gönderin.
+furkanbural32@gmail.com adresine "Hesap silme talebi" konulu bir mesaj gönderin.
 
 Talebiniz en geç 30 gün içinde sonuçlandırılır ve size bilgi verilir.
 
