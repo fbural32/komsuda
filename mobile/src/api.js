@@ -21,19 +21,50 @@ export async function clearToken() {
   await AsyncStorage.removeItem('token');
 }
 
+// Sunucu ücretsiz katmanda uykuya geçiyor; ilk istek 30-50 sn sürebilir.
+const ZAMAN_ASIMI = 60000;
+
 async function request(path, { method = 'GET', body } = {}) {
   const token = await getToken();
-  const res = await fetch(`${BASE}/api${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+
+  const kontrol = new AbortController();
+  const sayac = setTimeout(() => kontrol.abort(), ZAMAN_ASIMI);
+
+  let res;
+  try {
+    res = await fetch(`${BASE}/api${path}`, {
+      method,
+      signal: kontrol.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (e) {
+    clearTimeout(sayac);
+    if (e.name === 'AbortError') {
+      throw new Error('Sunucu yanıt vermedi. Biraz bekleyip tekrar dene.');
+    }
+    throw new Error('Sunucuya ulaşılamadı. İnternetini kontrol et.');
+  }
+  clearTimeout(sayac);
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+
+  // Sunucu uyanırken veya hata verdiğinde JSON yerine HTML dönebiliyor
+  let data = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      if (res.status >= 500 || res.status === 0) {
+        throw new Error('Sunucu şu an yanıt veremiyor. Biraz sonra tekrar dene.');
+      }
+      throw new Error('Sunucudan beklenmeyen bir yanıt geldi.');
+    }
+  }
+
   if (!res.ok) {
     const err = new Error(data?.error || 'Bir şeyler ters gitti');
     Object.assign(err, data || {});

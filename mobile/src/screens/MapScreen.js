@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, RefreshControl, Alert,
+  ActivityIndicator, RefreshControl, Alert, Linking,
 } from 'react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import * as Location from 'expo-location';
 import { api } from '../api';
 import {
-  STYLE_URL, RADIUS_ESYA, RADIUS_HIZMET, VARSAYILAN_ZOOM, daireGeoJSON,
+  HARITA_STILI, RADIUS_ESYA, RADIUS_HIZMET, VARSAYILAN_ZOOM, daireGeoJSON,
 } from '../mapConfig';
 import { colors, type, radius, space } from '../theme';
 
@@ -27,6 +27,7 @@ export default function MapScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('map');
   const [price, setPrice] = useState(PRICE_STEPS[0]);
+  const [konumHatasi, setKonumHatasi] = useState('');
 
   const load = useCallback(async (c = coords, p = price) => {
     if (!c) return;
@@ -36,36 +37,85 @@ export default function MapScreen({ navigation }) {
       });
       setRequests(data);
     } catch (e) {
-      Alert.alert('Hata', e.message);
+      // Sunucu uykudaysa ilk istek uzun sürebilir; kullanıcıyı boş bırakma
+      Alert.alert(
+        'Bağlantı sorunu',
+        e.message === 'Network request failed'
+          ? 'Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene.'
+          : e.message
+      );
     } finally {
       setLoading(false);
     }
   }, [coords, price]);
 
-  useEffect(() => {
-    (async () => {
+  const konumAl = useCallback(async () => {
+    setLoading(true);
+    setKonumHatasi('');
+    try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert(
-          'Konum izni gerekli',
-          'Yakınındaki istekleri gösterebilmek için konum iznine ihtiyacımız var.'
+        setKonumHatasi(
+          'Konum izni verilmedi. Yakınındaki istekleri görebilmek için ayarlardan izin vermen gerekiyor.'
         );
         setLoading(false);
         return;
       }
-      const pos = await Location.getCurrentPositionAsync({});
+
+      // GPS sinyali gelmezse 12 saniye sonra son bilinen konuma düş
+      let pos = await Promise.race([
+        Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
+        new Promise((_, red) => setTimeout(() => red(new Error('zaman aşımı')), 12000)),
+      ]).catch(() => null);
+
+      if (!pos) pos = await Location.getLastKnownPositionAsync().catch(() => null);
+
+      if (!pos) {
+        setKonumHatasi(
+          'Konumun alınamadı. GPS açık mı kontrol edip tekrar dene.'
+        );
+        setLoading(false);
+        return;
+      }
+
       const c = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
       setCoords(c);
-      load(c, price);
-    })();
+      await load(c, price);
+    } catch (e) {
+      setKonumHatasi(e.message || 'Konum alınamadı');
+      setLoading(false);
+    }
+  }, [load, price]);
+
+  useEffect(() => {
+    konumAl();
   }, []);
 
   const pickPrice = (p) => { setPrice(p); setLoading(true); load(coords, p); };
+
+  if (konumHatasi) {
+    return (
+      <View style={s.center}>
+        <Text style={s.hataBaslik}>Konum alınamadı</Text>
+        <Text style={s.hataMetin}>{konumHatasi}</Text>
+        <TouchableOpacity style={s.hataBtn} onPress={konumAl}>
+          <Text style={s.hataBtnMetin}>Tekrar dene</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={s.hataIkincil}
+          onPress={() => Linking.openSettings()}
+        >
+          <Text style={s.hataIkincilMetin}>Ayarları aç</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   if (loading && !requests.length) {
     return (
       <View style={s.center}>
         <ActivityIndicator color={colors.primary} />
+        <Text style={s.yukleniyorMetin}>Konumun alınıyor...</Text>
       </View>
     );
   }
@@ -113,15 +163,14 @@ export default function MapScreen({ navigation }) {
       {view === 'map' && coords ? (
         <MapLibreGL.MapView
           style={s.map}
-          styleURL={STYLE_URL}
+          mapStyle={HARITA_STILI}
           logoEnabled={false}
           attributionPosition={{ bottom: 8, right: 8 }}
         >
           <MapLibreGL.Camera
-            defaultSettings={{
-              centerCoordinate: [coords.longitude, coords.latitude],
-              zoomLevel: VARSAYILAN_ZOOM,
-            }}
+            centerCoordinate={[coords.longitude, coords.latitude]}
+            zoomLevel={VARSAYILAN_ZOOM}
+            animationDuration={0}
           />
 
           <MapLibreGL.ShapeSource
@@ -234,7 +283,20 @@ export default function MapScreen({ navigation }) {
 
 const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  center: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    paddingHorizontal: space.xl,
+  },
+  yukleniyorMetin: { ...type.small, marginTop: space.md },
+  hataBaslik: { ...type.h2, marginBottom: space.sm },
+  hataMetin: { ...type.body, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
+  hataBtn: {
+    backgroundColor: colors.primary, borderRadius: radius.md,
+    paddingVertical: 13, paddingHorizontal: 32, marginTop: space.xl,
+  },
+  hataBtnMetin: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  hataIkincil: { paddingVertical: space.md, marginTop: space.xs },
+  hataIkincilMetin: { ...type.small, color: colors.primary, fontWeight: '500' },
   map: { flex: 1 },
 
   ustSatir: {
