@@ -4,9 +4,10 @@ import { requireAuth, requireVerified } from '../auth.js';
 import { notifyNearby } from '../notify.js';
 
 const router = Router();
-// Eşya yakından gelir, hizmet veren araçla daha uzaktan gelebilir
-const RADIUS_ESYA = 3000;
-const RADIUS_HIZMET = 10000;
+// Eşya yakından gelir, hizmet veren araçla daha uzaktan gelebilir.
+// Başlangıçta geniş tutuldu; kullanıcı yoğunluğu artınca daraltılabilir.
+const RADIUS_ESYA = 10000;
+const RADIUS_HIZMET = 25000;
 const RADIUS_M = RADIUS_ESYA; // geriye dönük kullanım
 const NOTIFY_COOLDOWN_MIN = 15;
 const MAX_OFFERS = 3;

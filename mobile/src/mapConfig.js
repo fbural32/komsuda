@@ -40,12 +40,12 @@ export const HARITA_STILI = {
   ],
 };
 
-export const RADIUS_ESYA = 3000;
-export const RADIUS_HIZMET = 10000;
+export const RADIUS_ESYA = 10000;
+export const RADIUS_HIZMET = 25000;
 export const RADIUS_M = RADIUS_ESYA;
 
-// 14 ≈ mahalle ölçeği, sokak adları okunur.
-export const VARSAYILAN_ZOOM = 14;
+// 11.5 ≈ 10 km dairesi ekrana sığar.
+export const VARSAYILAN_ZOOM = 11.5;
 
 // Yarıçap dairesini GeoJSON poligonu olarak üretir.
 export function daireGeoJSON(lat, lng, metre, kenar = 64) {

@@ -267,7 +267,7 @@ export default function MapScreen({ navigation }) {
 
       {view === 'map' && (
         <View style={s.yaricapNot}>
-          <Text style={s.yaricapText}>Eşya 3 km · Hizmet 10 km</Text>
+          <Text style={s.yaricapText}>Eşya 10 km · Hizmet 25 km</Text>
         </View>
       )}
 
