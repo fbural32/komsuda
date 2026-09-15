@@ -8,4 +8,4 @@ play-service-account.json
 mobile/.env
 *.keystore
 *.jks
-android/gradle.properties
+**/gradle.properties
