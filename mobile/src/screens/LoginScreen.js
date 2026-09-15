@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
-  View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator,
+  View, Text, StyleSheet, TextInput, TouchableOpacity,
+  ActivityIndicator, Alert,
 } from 'react-native';
 import { api, setToken } from '../api';
 import { colors, type, radius, space } from '../theme';
@@ -15,6 +16,26 @@ export default function LoginScreen({ navigation }) {
   const [onay, setOnay] = useState({ sartlar: false, konum: false, yurtdisi: false, bildirim: false });
 
   const tikla = (k) => { setOnay({ ...onay, [k]: !onay[k] }); setError(''); };
+
+  const sifremiUnuttum = async () => {
+    if (!email.includes('@')) {
+      setError('Önce e-posta adresini yaz, sonra bu bağlantıya bas.');
+      return;
+    }
+    setError('');
+    setBusy(true);
+    try {
+      await api.sifremiUnuttum(email.trim());
+      Alert.alert(
+        'Bağlantı gönderildi',
+        'Bu adrese kayıtlı bir hesap varsa şifre sıfırlama bağlantısı gönderildi. Bağlantı 1 saat geçerli.'
+      );
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const submit = async () => {
     if (!email.includes('@')) return setError('Geçerli bir e-posta gir.');
@@ -101,6 +122,12 @@ export default function LoginScreen({ navigation }) {
               : <Text style={s.btnText}>{mode === 'login' ? 'Giriş yap' : 'Hesap oluştur'}</Text>}
       </TouchableOpacity>
 
+      {mode === 'login' && (
+        <TouchableOpacity onPress={sifremiUnuttum} disabled={busy}>
+          <Text style={s.unuttum}>Şifremi unuttum</Text>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity onPress={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}>
         <Text style={s.switch}>
           {mode === 'login' ? 'Hesabın yok mu? Kayıt ol' : 'Zaten hesabın var mı? Giriş yap'}
@@ -145,5 +172,9 @@ const s = StyleSheet.create({
     paddingVertical: 15, alignItems: 'center', marginTop: space.md,
   },
   btnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  switch: { ...type.small, textAlign: 'center', marginTop: space.lg, color: colors.primary },
+  unuttum: {
+    ...type.small, textAlign: 'center', marginTop: space.lg,
+    color: colors.textMuted,
+  },
+  switch: { ...type.small, textAlign: 'center', marginTop: space.md, color: colors.primary },
 });

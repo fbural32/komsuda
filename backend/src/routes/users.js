@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { query } from '../db.js';
 import { signToken, requireAuth } from '../auth.js';
@@ -25,8 +25,8 @@ router.post('/register', async (req, res) => {
   );
 
   const token = await query(
-    `INSERT INTO email_tokens (user_id, expires_at)
-     VALUES ($1, now() + interval '24 hours') RETURNING token`,
+    `INSERT INTO email_tokens (user_id, expires_at, tur)
+     VALUES ($1, now() + interval '24 hours', 'dogrulama') RETURNING token`,
     [rows[0].id]
   );
 
@@ -79,6 +79,7 @@ router.get('/verify/:token', async (req, res) => {
   const { rows } = await query(
     `UPDATE email_tokens SET used_at = now()
       WHERE token = $1 AND used_at IS NULL AND expires_at > now()
+        AND tur = 'dogrulama'
       RETURNING user_id`,
     [req.params.token]
   );
@@ -111,12 +112,13 @@ router.post('/resend-verification', requireAuth, async (req, res) => {
   }
 
   await query(
-    "UPDATE email_tokens SET used_at = now() WHERE user_id = $1 AND used_at IS NULL",
+    `UPDATE email_tokens SET used_at = now()
+      WHERE user_id = $1 AND used_at IS NULL AND tur = 'dogrulama'`,
     [req.user.id]
   );
   const token = await query(
-    `INSERT INTO email_tokens (user_id, expires_at)
-     VALUES ($1, now() + interval '24 hours') RETURNING token`,
+    `INSERT INTO email_tokens (user_id, expires_at, tur)
+     VALUES ($1, now() + interval '24 hours', 'dogrulama') RETURNING token`,
     [req.user.id]
   );
 
@@ -128,6 +130,114 @@ router.post('/resend-verification', requireAuth, async (req, res) => {
   }
   res.json({ ok: true });
 });
+
+// --- Şifre sıfırlama ---------------------------------------------
+
+// Sıfırlama maili iste. Hesap yoksa da aynı cevabı döner (adres sızdırmamak için).
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'E-posta gerekli' });
+
+  const { rows } = await query(
+    'SELECT id, display_name, status FROM users WHERE email = $1',
+    [email]
+  );
+  const user = rows[0];
+
+  if (user && user.status !== 'banned') {
+    // Bekleyen eski sıfırlama linklerini geçersiz kıl
+    await query(
+      `UPDATE email_tokens SET used_at = now()
+        WHERE user_id = $1 AND used_at IS NULL AND tur = 'sifirlama'`,
+      [user.id]
+    );
+
+    const token = await query(
+      `INSERT INTO email_tokens (user_id, expires_at, tur)
+       VALUES ($1, now() + interval '1 hour', 'sifirlama') RETURNING token`,
+      [user.id]
+    );
+
+    try {
+      await sifreSifirlamaMaili(email, user.display_name, token.rows[0].token);
+    } catch (e) {
+      console.error('Sıfırlama maili gönderilemedi:', e.message);
+    }
+  }
+
+  res.json({
+    ok: true,
+    message: 'Bu adrese kayıtlı bir hesap varsa sıfırlama bağlantısı gönderildi.',
+  });
+});
+
+// Linke tıklayınca açılan form
+router.get('/reset/:token', async (req, res) => {
+  const { rows } = await query(
+    `SELECT user_id FROM email_tokens
+      WHERE token = $1 AND used_at IS NULL AND expires_at > now()
+        AND tur = 'sifirlama'`,
+    [req.params.token]
+  );
+  if (!rows.length)
+    return res
+      .status(400)
+      .send(sonucSayfasi(false, 'Bağlantı geçersiz veya süresi dolmuş. Uygulamadan yeni bir sıfırlama isteyebilirsin.'));
+
+  res.send(sifreFormu(req.params.token));
+});
+
+// Formun gönderimi
+router.post('/reset/:token', express.urlencoded({ extended: false }), async (req, res) => {
+  const { sifre, sifre2 } = req.body;
+
+  if (!sifre || sifre.length < 8)
+    return res.status(400).send(sifreFormu(req.params.token, 'Şifre en az 8 karakter olmalı.'));
+  if (sifre !== sifre2)
+    return res.status(400).send(sifreFormu(req.params.token, 'Şifreler eşleşmiyor.'));
+
+  const { rows } = await query(
+    `UPDATE email_tokens SET used_at = now()
+      WHERE token = $1 AND used_at IS NULL AND expires_at > now()
+        AND tur = 'sifirlama'
+      RETURNING user_id`,
+    [req.params.token]
+  );
+  if (!rows.length)
+    return res
+      .status(400)
+      .send(sonucSayfasi(false, 'Bağlantı geçersiz veya süresi dolmuş.'));
+
+  const hash = await bcrypt.hash(sifre, 10);
+  await query('UPDATE users SET password_hash = $2 WHERE id = $1', [
+    rows[0].user_id,
+    hash,
+  ]);
+
+  res.send(sonucSayfasi(true, 'Şifren değiştirildi. Uygulamaya dönüp yeni şifrenle giriş yapabilirsin.'));
+});
+
+function sifreFormu(token, hata) {
+  return `<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Komşuda — Şifre sıfırla</title></head>
+<body style="margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F2F4F1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <form method="POST" style="width:100%;max-width:340px;background:#fff;border:1px solid #DCE3DE;border-radius:14px;padding:28px 24px;">
+    <div style="font-size:22px;font-weight:700;color:#1F6F4A;text-align:center;margin-bottom:6px;">Komşuda</div>
+    <div style="font-size:15px;color:#14231F;text-align:center;margin-bottom:20px;">Yeni şifreni belirle</div>
+    ${hata ? `<div style="background:#FCE9E0;color:#C0392B;font-size:13px;padding:9px 11px;border-radius:8px;margin-bottom:14px;">${hata}</div>` : ''}
+    <input type="password" name="sifre" placeholder="Yeni şifre" required minlength="8"
+      style="width:100%;box-sizing:border-box;border:1px solid #DCE3DE;border-radius:9px;padding:12px;font-size:15px;margin-bottom:10px;">
+    <input type="password" name="sifre2" placeholder="Yeni şifre (tekrar)" required minlength="8"
+      style="width:100%;box-sizing:border-box;border:1px solid #DCE3DE;border-radius:9px;padding:12px;font-size:15px;margin-bottom:16px;">
+    <button type="submit"
+      style="width:100%;background:#1F6F4A;color:#fff;border:none;border-radius:9px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;">
+      Şifreyi değiştir
+    </button>
+    <div style="font-size:12px;color:#8C9A94;text-align:center;margin-top:14px;">En az 8 karakter.</div>
+  </form>
+</body></html>`;
+}
 
 // Profil
 router.get('/me', requireAuth, async (req, res) => {

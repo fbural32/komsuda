@@ -86,6 +86,8 @@ export async function fotografKaynagi(dealId, photoId) {
 export const api = {
   register: (b) => request('/users/register', { method: 'POST', body: b }),
   login: (b) => request('/users/login', { method: 'POST', body: b }),
+  sifremiUnuttum: (email) =>
+    request('/users/forgot-password', { method: 'POST', body: { email } }),
   me: () => request('/users/me'),
   hesabiSil: () => request('/users/me', { method: 'DELETE' }),
   resendVerification: () =>
