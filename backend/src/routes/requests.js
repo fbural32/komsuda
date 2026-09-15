@@ -31,7 +31,7 @@ router.get('/', requireAuth, async (req, res) => {
             ST_Y(r.approx_location::geometry) AS lat,
             ST_X(r.approx_location::geometry) AS lng,
             ROUND(ST_Distance(r.approx_location,
-                  ST_MakePoint($2,$1)::geography)) AS distance_m,
+                  ST_MakePoint($2::float8,$1::float8)::geography)) AS distance_m,
             u.display_name, u.rating_avg, u.rating_count,
             (SELECT COUNT(*) FROM responses
               WHERE request_id = r.id AND status = 'pending')::int AS offer_count,
@@ -44,10 +44,10 @@ router.get('/', requireAuth, async (req, res) => {
       WHERE r.status = 'open'
         AND r.requester_id <> $6
         AND NOT ($6 = ANY(r.blocked_user_ids))
-        AND r.price BETWEEN $3 AND $4
+        AND r.price BETWEEN $3::int AND $4::int
         AND ($5::int IS NULL OR r.category_id = $5)
         AND ST_DWithin(r.approx_location, ST_MakePoint($2,$1)::geography,
-              CASE WHEN c.tur = 'hizmet' THEN $7 ELSE $8 END)
+              CASE WHEN c.tur = 'hizmet' THEN $7::float8 ELSE $8::float8 END)
         AND (SELECT COUNT(*) FROM responses
               WHERE request_id = r.id AND status = 'pending') < $9
       ORDER BY r.created_at DESC
@@ -160,7 +160,7 @@ router.get('/:id/mine', requireAuth, async (req, res) => {
         AND u.status = 'active'
         AND u.id <> r.requester_id
         AND d.last_location IS NOT NULL
-        AND ST_DWithin(d.last_location, r.exact_location, $2)`,
+        AND ST_DWithin(d.last_location, r.exact_location, $2::float8)`,
     [req.params.id, rows[0].tur === 'hizmet' ? RADIUS_HIZMET : RADIUS_ESYA]
   );
 

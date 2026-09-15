@@ -19,7 +19,7 @@ export default {
     assetBundlePatterns: ['**/*'],
     android: {
       package: 'com.fbural.komsuda',
-      versionCode: 1,
+      versionCode: 2,
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#1F6F4A',

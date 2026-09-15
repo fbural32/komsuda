@@ -14,7 +14,8 @@ export async function notifyNearby(requestId, lat, lng, radiusM = 3000) {
         AND u.id <> r.requester_id
         AND d.last_location IS NOT NULL
         AND d.location_updated_at > now() - interval '24 hours'
-        AND ST_DWithin(d.last_location, ST_MakePoint($3,$2)::geography, $4)
+        AND ST_DWithin(d.last_location,
+              ST_MakePoint($3::float8,$2::float8)::geography, $4::float8)
       LIMIT 500`,
     [requestId, lat, lng, radiusM]
   );

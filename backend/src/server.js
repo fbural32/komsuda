@@ -8,16 +8,38 @@ import requests from './routes/requests.js';
 import deals from './routes/deals.js';
 import ratings from './routes/ratings.js';
 
+// Express 4 async route hatalarını kendiliğinden yakalamıyor.
+// Bu sarmalayıcı olmadan tek bir sorgu hatası tüm sunucuyu çökertiyor.
+function asyncGuard(router) {
+  for (const katman of router.stack) {
+    if (!katman.route) continue;
+    katman.route.stack = katman.route.stack.map((k) => {
+      const f = k.handle;
+      if (f.length >= 4) return k;
+      k.handle = (req, res, next) => {
+        try {
+          const sonuc = f(req, res, next);
+          if (sonuc && typeof sonuc.catch === 'function') sonuc.catch(next);
+        } catch (e) {
+          next(e);
+        }
+      };
+      return k;
+    });
+  }
+  return router;
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.use('/api/users', users);
-app.use('/api/requests', requests);
-app.use('/api/deals', deals);
-app.use('/api/ratings', ratings);
+app.use('/api/users', asyncGuard(users));
+app.use('/api/requests', asyncGuard(requests));
+app.use('/api/deals', asyncGuard(deals));
+app.use('/api/ratings', asyncGuard(ratings));
 
 app.use((err, _req, res, _next) => {
   console.error(err);
@@ -59,6 +81,14 @@ async function sweep() {
   }
 }
 setInterval(sweep, 5 * 60 * 1000);
+
+// Son çare ağı: beklenmeyen bir hata sunucuyu düşürmesin
+process.on('unhandledRejection', (sebep) => {
+  console.error('Yakalanmayan söz reddi:', sebep);
+});
+process.on('uncaughtException', (hata) => {
+  console.error('Yakalanmayan istisna:', hata);
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Komşuda backend :${port}`));
